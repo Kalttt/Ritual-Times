@@ -127,6 +127,8 @@ h1, h2, h3, h4, h5, h6 {
   column-count: 2;
   column-gap: 2rem;
   margin-top: 1rem;
+  white-space: pre-wrap;
+  line-height: 1.6;
 }
 
 @media (max-width: 768px) {
@@ -167,6 +169,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .side-article .summary-content {
   font-size: 1.05rem;
+  white-space: pre-wrap;
+  line-height: 1.5;
 }
 
 .raw-feed-box {

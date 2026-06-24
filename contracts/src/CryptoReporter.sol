@@ -283,6 +283,22 @@ contract CryptoReporter {
         activeScheduleId = 0;
     }
 
+    function publishNews(uint8 category, string calldata raw, string calldata summary, string calldata image) external onlyOwner {
+        if (category == 0) {
+            marketRaw = raw;
+            marketSummary = summary;
+            marketImage = image;
+        } else if (category == 1) {
+            defiRaw = raw;
+            defiSummary = summary;
+            defiImage = image;
+        } else if (category == 2) {
+            aiRaw = raw;
+            aiSummary = summary;
+            aiImage = image;
+        }
+    }
+
     function manualTrigger() external {
         // Market
         marketRaw = "Bitcoin surges past $60k as institutional adoption grows. Ethereum follows closely after ETF approvals.";
