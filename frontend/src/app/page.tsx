@@ -70,6 +70,9 @@ export default async function Home() {
       <footer className="footer">
         <p>Built with Next.js, Viem, and Ritual Chain</p>
         <p>Contract Address: {REPORTER_ADDRESS}</p>
+        <p className="credit" style={{ marginTop: '1rem', fontWeight: 'bold' }}>
+          Agent built by <a href="https://x.com/0xtinhchan" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>@0xtinhchan</a>
+        </p>
       </footer>
     </main>
   );
