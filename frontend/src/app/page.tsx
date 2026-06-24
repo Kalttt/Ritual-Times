@@ -8,9 +8,8 @@ export default async function Home() {
   let status = "DEPLOYING";
 
   try {
-    // Attempt to fetch from blockchain
-    if (REPORTER_ADDRESS !== "0x0000000000000000000000000000000000000000") {
-      const [news, summary] = await Promise.all([
+    // Fetch from blockchain
+    const [news, summary] = await Promise.all([
         publicClient.readContract({
           address: REPORTER_ADDRESS as `0x${string}`,
           abi: REPORTER_ABI,
@@ -28,7 +27,6 @@ export default async function Home() {
           latestSummary = summary as string;
           status = "LIVE";
       }
-    }
   } catch (error) {
     console.error("Failed to read from contract:", error);
   }
