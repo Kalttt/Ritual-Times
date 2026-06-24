@@ -20,21 +20,15 @@ export const publicClient = createPublicClient({
 });
 
 export const REPORTER_ABI = [
-  {
-    inputs: [],
-    name: "latestNews",
-    outputs: [{ type: "string" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "latestSummary",
-    outputs: [{ type: "string" }],
-    stateMutability: "view",
-    type: "function",
-  }
+  { inputs: [], name: "marketSummary", outputs: [{ type: "string" }], stateMutability: "view", type: "function" },
+  { inputs: [], name: "marketRaw", outputs: [{ type: "string" }], stateMutability: "view", type: "function" },
+  { inputs: [], name: "marketImage", outputs: [{ type: "string" }], stateMutability: "view", type: "function" },
+  { inputs: [], name: "defiSummary", outputs: [{ type: "string" }], stateMutability: "view", type: "function" },
+  { inputs: [], name: "defiRaw", outputs: [{ type: "string" }], stateMutability: "view", type: "function" },
+  { inputs: [], name: "defiImage", outputs: [{ type: "string" }], stateMutability: "view", type: "function" },
+  { inputs: [], name: "aiSummary", outputs: [{ type: "string" }], stateMutability: "view", type: "function" },
+  { inputs: [], name: "aiRaw", outputs: [{ type: "string" }], stateMutability: "view", type: "function" },
+  { inputs: [], name: "aiImage", outputs: [{ type: "string" }], stateMutability: "view", type: "function" }
 ] as const;
 
-// Replace with deployed address. For now we use a dummy one until deployed
-export const REPORTER_ADDRESS = "0x6e038de048395645a96bdf20dba2ca0f81133325";
+export const REPORTER_ADDRESS = "0x8a8dfacb9106a4e194774ef79b510d3b957ac0ab";

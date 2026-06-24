@@ -32,8 +32,21 @@ contract CryptoReporter {
     address public owner;
 
     uint256 public activeScheduleId;
-    string public latestNews;
-    string public latestSummary;
+    
+    // Market
+    string public marketSummary;
+    string public marketRaw;
+    string public marketImage;
+
+    // DeFi
+    string public defiSummary;
+    string public defiRaw;
+    string public defiImage;
+
+    // AI
+    string public aiSummary;
+    string public aiRaw;
+    string public aiImage;
 
     struct HTTPResponse {
         uint16 status;
@@ -137,8 +150,8 @@ contract CryptoReporter {
                 return;
             }
 
-            latestNews = string(resp.body);
-            emit DataFetched(resp.status, latestNews);
+            marketRaw = string(resp.body);
+            emit DataFetched(resp.status, marketRaw);
 
             // Dynamically schedule Phase 2 (LLM call)
             // Note: We escape double quotes inside the string simply by building the JSON
@@ -146,7 +159,7 @@ contract CryptoReporter {
                 this.generateSummary.selector,
                 uint256(0),
                 executor,
-                latestNews
+                marketRaw
             );
 
             scheduler.schedule(
@@ -258,7 +271,7 @@ contract CryptoReporter {
                 (, , bytes memory messageData) = abi.decode(choicesData[0], (uint256, string, bytes));
                 (, string memory content, , ,) = abi.decode(messageData, (string, string, string, uint256, bytes[]));
                 
-                latestSummary = content;
+                marketSummary = content;
                 emit SummaryGenerated(content);
             }
         }
@@ -271,10 +284,23 @@ contract CryptoReporter {
     }
 
     function manualTrigger() external {
-        latestNews = "Bitcoin surges past $60k as institutional adoption grows. Ethereum follows closely after ETF approvals. Market sentiment is highly bullish.";
-        latestSummary = "The crypto market is experiencing a strong uptrend driven by institutional investments in Bitcoin and Ethereum ETFs. Investor sentiment remains highly optimistic as key resistance levels are broken.";
-        emit DataFetched(200, latestNews);
-        emit SummaryGenerated(latestSummary);
+        // Market
+        marketRaw = "Bitcoin surges past $60k as institutional adoption grows. Ethereum follows closely after ETF approvals.";
+        marketSummary = "The crypto market is experiencing a strong uptrend driven by institutional investments in Bitcoin and Ethereum ETFs. Investor sentiment remains highly optimistic.";
+        marketImage = "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
+
+        // DeFi
+        defiRaw = "Uniswap v4 hooks gain traction. Total Value Locked (TVL) across DeFi protocols hits new yearly high.";
+        defiSummary = "Decentralized Finance is seeing renewed interest with the introduction of advanced AMM features and rising TVL, signaling returning liquidity to on-chain markets.";
+        defiImage = "https://images.unsplash.com/photo-1639762681057-408e52192e55?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
+
+        // AI
+        aiRaw = "Ritual Network deploys new LLM precompiles. AI agents are now autonomously trading and managing portfolios on-chain.";
+        aiSummary = "The intersection of Artificial Intelligence and Web3 is accelerating, with autonomous agents leveraging decentralized infrastructure to execute complex on-chain operations.";
+        aiImage = "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
+
+        emit DataFetched(200, marketRaw);
+        emit SummaryGenerated(marketSummary);
     }
 
     receive() external payable {}

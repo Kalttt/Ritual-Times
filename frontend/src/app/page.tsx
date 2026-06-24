@@ -1,32 +1,38 @@
 import { publicClient, REPORTER_ABI, REPORTER_ADDRESS } from '@/lib/ritualClient';
+import Image from 'next/image';
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
 export default async function Home() {
-  let latestNews = "Awaiting first schedule execution...";
-  let latestSummary = "The AI Agent is currently analyzing the latest data. Please check back shortly for the newest market insights.";
-  let status = "DEPLOYING";
+  let data = {
+    marketSummary: "Awaiting...", marketRaw: "Awaiting...", marketImage: "",
+    defiSummary: "Awaiting...", defiRaw: "Awaiting...", defiImage: "",
+    aiSummary: "Awaiting...", aiRaw: "Awaiting...", aiImage: "",
+    status: "DEPLOYING"
+  };
 
   try {
-    // Fetch from blockchain
-    const [news, summary] = await Promise.all([
-        publicClient.readContract({
-          address: REPORTER_ADDRESS as `0x${string}`,
-          abi: REPORTER_ABI,
-          functionName: 'latestNews',
-        }),
-        publicClient.readContract({
-          address: REPORTER_ADDRESS as `0x${string}`,
-          abi: REPORTER_ABI,
-          functionName: 'latestSummary',
-        }),
-      ]);
+    const keys = [
+      'marketSummary', 'marketRaw', 'marketImage',
+      'defiSummary', 'defiRaw', 'defiImage',
+      'aiSummary', 'aiRaw', 'aiImage'
+    ];
 
-      if (news) latestNews = news as string;
-      if (summary) {
-          latestSummary = summary as string;
-          status = "LIVE";
-      }
+    const results = await Promise.all(
+      keys.map(key => publicClient.readContract({
+        address: REPORTER_ADDRESS as `0x${string}`,
+        abi: REPORTER_ABI,
+        functionName: key as any,
+      }))
+    );
+
+    keys.forEach((key, index) => {
+      if (results[index]) (data as any)[key] = results[index] as string;
+    });
+
+    if (data.marketSummary && data.marketSummary !== "Awaiting...") {
+      data.status = "LIVE";
+    }
   } catch (error) {
     console.error("Failed to read from contract:", error);
   }
@@ -46,26 +52,52 @@ export default async function Home() {
         </div>
       </header>
 
-      <section className="headline-section">
-        <article className="main-article">
-          <div className={`status-badge ${status === "LIVE" ? "status-live" : ""}`}>
-            {status}
+      <div className="newspaper-grid">
+        {/* Main Article */}
+        <section className="main-article-section">
+          <div className={`status-badge ${data.status === "LIVE" ? "status-live" : ""}`}>
+            {data.status}
           </div>
-          <h2>AI Agent Analyzes Crypto Markets</h2>
-          <div className="author">By Autonomous Reporter 0x0802</div>
-          <div className="summary-content">
-            {latestSummary}
-          </div>
-        </article>
+          <article className="article main-article">
+            <h2>Crypto Markets Rebound</h2>
+            <div className="author">By Autonomous Reporter 0x0802</div>
+            {data.marketImage && (
+              <div className="article-image-container">
+                <img src={data.marketImage} alt="Market" className="article-image" />
+              </div>
+            )}
+            <div className="summary-content">{data.marketSummary}</div>
+            <div className="raw-feed-box">
+              <strong>Raw Feed:</strong> {data.marketRaw}
+            </div>
+          </article>
+        </section>
 
-        <aside className="side-article">
-          <h3>Raw Market Feed</h3>
-          <p className="author">Sourced via HTTP Precompile 0x0801</p>
-          <div className="raw-feed">
-            {latestNews}
-          </div>
-        </aside>
-      </section>
+        {/* Side Articles */}
+        <section className="side-articles-section">
+          <article className="article side-article">
+            <h3>DeFi TVL Surges</h3>
+            <div className="author">By Oracle Bot</div>
+            {data.defiImage && (
+              <div className="article-image-container">
+                <img src={data.defiImage} alt="DeFi" className="article-image" />
+              </div>
+            )}
+            <div className="summary-content">{data.defiSummary}</div>
+          </article>
+
+          <article className="article side-article">
+            <h3>AI & Web3 Integration</h3>
+            <div className="author">By LLM Precompile</div>
+            {data.aiImage && (
+              <div className="article-image-container">
+                <img src={data.aiImage} alt="AI" className="article-image" />
+              </div>
+            )}
+            <div className="summary-content">{data.aiSummary}</div>
+          </article>
+        </section>
+      </div>
 
       <footer className="footer">
         <p>Built with Next.js, Viem, and Ritual Chain</p>
