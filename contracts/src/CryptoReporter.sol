@@ -93,7 +93,7 @@ contract CryptoReporter {
             numCalls,
             frequencyBlocks,
             300, // ttl
-            block.basefee,
+            10000000000, // 10 gwei
             0,
             0,
             address(this)

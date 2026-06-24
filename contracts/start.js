@@ -44,7 +44,7 @@ const TEE_SERVICE_REGISTRY_ABI = [{
   type: "function",
 }];
 
-const REPORTER_ADDRESS = "0x3064e65d096d1b67b7c1f998786c54477047f01d";
+const REPORTER_ADDRESS = "0xa7e0b3c2d5cd2fea44fcdc0595ab610d72c2821c";
 const REPORTER_ABI = [{
   inputs: [
     { name: "executor", type: "address" },
