@@ -8,6 +8,7 @@ export default async function Home() {
     marketSummary: "Awaiting...", marketRaw: "Awaiting...", marketImage: "",
     defiSummary: "Awaiting...", defiRaw: "Awaiting...", defiImage: "",
     aiSummary: "Awaiting...", aiRaw: "Awaiting...", aiImage: "",
+    communitySummary: "Awaiting...", communityRaw: "Awaiting...", communityImage: "",
     status: "DEPLOYING"
   };
 
@@ -15,7 +16,8 @@ export default async function Home() {
     const keys = [
       'marketSummary', 'marketRaw', 'marketImage',
       'defiSummary', 'defiRaw', 'defiImage',
-      'aiSummary', 'aiRaw', 'aiImage'
+      'aiSummary', 'aiRaw', 'aiImage',
+      'communitySummary', 'communityRaw', 'communityImage'
     ];
 
     const results = await Promise.all(
@@ -67,9 +69,17 @@ export default async function Home() {
               </div>
             )}
             <div className="summary-content">{data.marketSummary}</div>
-            <div className="raw-feed-box">
-              <strong>Raw Feed:</strong> {data.marketRaw}
-            </div>
+          </article>
+
+          <article className="article side-article" style={{ marginTop: '2rem' }}>
+            <h2 style={{ fontSize: '1.8rem', marginBottom: '0.5rem', fontFamily: 'var(--font-serif)' }}>Community Watch: Scams & Security</h2>
+            <div className="author">By Security Desk</div>
+            {data.communityImage && (
+              <div className="article-image-container">
+                <img src={data.communityImage} alt="Community" className="article-image" />
+              </div>
+            )}
+            <div className="summary-content" style={{ columnCount: 1, fontSize: '1.1rem' }}>{data.communitySummary}</div>
           </article>
         </section>
 

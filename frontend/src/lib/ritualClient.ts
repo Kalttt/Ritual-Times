@@ -28,7 +28,10 @@ export const REPORTER_ABI = [
   { inputs: [], name: "defiImage", outputs: [{ type: "string" }], stateMutability: "view", type: "function" },
   { inputs: [], name: "aiSummary", outputs: [{ type: "string" }], stateMutability: "view", type: "function" },
   { inputs: [], name: "aiRaw", outputs: [{ type: "string" }], stateMutability: "view", type: "function" },
-  { inputs: [], name: "aiImage", outputs: [{ type: "string" }], stateMutability: "view", type: "function" }
+  { inputs: [], name: "aiImage", outputs: [{ type: "string" }], stateMutability: "view", type: "function" },
+  { inputs: [], name: "communitySummary", outputs: [{ type: "string" }], stateMutability: "view", type: "function" },
+  { inputs: [], name: "communityRaw", outputs: [{ type: "string" }], stateMutability: "view", type: "function" },
+  { inputs: [], name: "communityImage", outputs: [{ type: "string" }], stateMutability: "view", type: "function" }
 ] as const;
 
-export const REPORTER_ADDRESS = "0x4e9272e0955501cec74af00dadeebb0604fbbd7b";
+export const REPORTER_ADDRESS = "0xcdc70fc6e70edf6927aa1d3b32c5b3cf43016739";

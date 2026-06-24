@@ -48,6 +48,11 @@ contract CryptoReporter {
     string public aiRaw;
     string public aiImage;
 
+    // Community / Drama / Hacks
+    string public communitySummary;
+    string public communityRaw;
+    string public communityImage;
+
     struct HTTPResponse {
         uint16 status;
         string[] headerKeys;
@@ -296,6 +301,10 @@ contract CryptoReporter {
             aiRaw = raw;
             aiSummary = summary;
             aiImage = image;
+        } else if (category == 3) {
+            communityRaw = raw;
+            communitySummary = summary;
+            communityImage = image;
         }
     }
 

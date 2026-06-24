@@ -76,24 +76,29 @@ async function main() {
   console.log("Deploying contract...");
   const schedulerAddress = "0x56e776BAE2DD60664b69Bd5F865F1180ffB7D58B";
   
-  const hash = await walletClient.deployContract({
+  const currentNonce = await publicClient.getTransactionCount({ address: account.address });
+
+  const deployHash = await walletClient.deployContract({
     abi,
     bytecode: `0x${bytecode}`,
     args: [schedulerAddress],
+    nonce: 35
   });
+  console.log(`Deployment transaction sent: ${deployHash}`);
 
-  console.log(`Deployment transaction sent: ${hash}`);
-  const receipt = await publicClient.waitForTransactionReceipt({ hash });
+  // 3. Wait for deployment receipt
+  const receipt = await publicClient.waitForTransactionReceipt({ hash: deployHash });
   const contractAddress = receipt.contractAddress;
   console.log(`Contract deployed successfully at: ${contractAddress}`);
 
-  // 3. Deposit fees
+  // 4. Deposit fees
   console.log("Depositing 0.05 RITUAL for execution fees...");
   const depositHash = await walletClient.writeContract({
     address: contractAddress,
     abi,
     functionName: 'depositForFees',
-    value: parseEther('0.05')
+    value: parseEther('0.05'),
+    nonce: 36
   });
   
   console.log(`Deposit transaction sent: ${depositHash}`);

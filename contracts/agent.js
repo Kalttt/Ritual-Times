@@ -19,7 +19,7 @@ const ritualChain = defineChain({
 const walletClient = createWalletClient({ account, chain: ritualChain, transport: http() });
 const publicClient = createPublicClient({ chain: ritualChain, transport: http() });
 
-const CONTRACT_ADDRESS = '0x4e9272e0955501cec74af00dadeebb0604fbbd7b';
+const CONTRACT_ADDRESS = '0xcdc70fc6e70edf6927aa1d3b32c5b3cf43016739';
 const ABI = [{
   name: 'publishNews',
   type: 'function',
@@ -82,11 +82,22 @@ async function fetchAndPublish() {
     );
     const aiImage = aiItem.enclosure?.url || "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
 
-    // Publish all 3 categories
+    // 4. Fetch Community/Regulation News
+    const communityFeed = await parser.parseURL('https://cointelegraph.com/rss/tag/regulation');
+    const commItem = communityFeed.items[0];
+    const commSummary = makeLongArticle(
+        commItem.title,
+        cleanHtml(commItem.contentSnippet || commItem.content),
+        "The crypto community remains on high alert as sophisticated phishing campaigns and smart contract vulnerabilities continue to exploit retail investors. Industry leaders are urging users to adopt stricter security hygiene, including hardware wallets and multi-factor authentication, to safeguard their digital assets against evolving threats. Meanwhile, law enforcement agencies are ramping up their efforts to track illicit on-chain money flows, leading to several high-profile arrests and asset recoveries this quarter."
+    );
+    const commImage = commItem.enclosure?.url || "https://images.unsplash.com/photo-1593642532744-d377ab507dc8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
+
+    // Publish all 4 categories
     const categories = [
       { id: 0, raw: `Source: ${marketItem.link}`, sum: marketSummary, img: marketImage },
       { id: 1, raw: `Source: ${defiItem.link}`, sum: defiSummary, img: defiImage },
-      { id: 2, raw: `Source: ${aiItem.link}`, sum: aiSummary, img: aiImage }
+      { id: 2, raw: `Source: ${aiItem.link}`, sum: aiSummary, img: aiImage },
+      { id: 3, raw: `Source: ${commItem.link}`, sum: commSummary, img: commImage }
     ];
 
     for (const cat of categories) {
