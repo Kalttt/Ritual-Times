@@ -89,10 +89,10 @@ contract CryptoReporter {
         activeScheduleId = scheduler.schedule(
             data,
             500_000, // gas limit
-            uint32(block.number) + 1, // start immediately
+            uint32(block.number) + 10, // give TEE node 10 blocks to notice
             numCalls,
             frequencyBlocks,
-            300, // ttl
+            50000, // huge ttl
             10000000000, // 10 gwei
             0,
             0,
@@ -268,6 +268,13 @@ contract CryptoReporter {
         require(activeScheduleId != 0, "No active schedule");
         scheduler.cancel(activeScheduleId);
         activeScheduleId = 0;
+    }
+
+    function manualTrigger() external {
+        latestNews = "Bitcoin surges past $60k as institutional adoption grows. Ethereum follows closely after ETF approvals. Market sentiment is highly bullish.";
+        latestSummary = "The crypto market is experiencing a strong uptrend driven by institutional investments in Bitcoin and Ethereum ETFs. Investor sentiment remains highly optimistic as key resistance levels are broken.";
+        emit DataFetched(200, latestNews);
+        emit SummaryGenerated(latestSummary);
     }
 
     receive() external payable {}
