@@ -37,4 +37,4 @@ export const REPORTER_ABI = [
 ] as const;
 
 // Replace with deployed address. For now we use a dummy one until deployed
-export const REPORTER_ADDRESS = "0xe01390e1a3fd6092ec402b9a08df2d4ba2661a23";
+export const REPORTER_ADDRESS = "0x6e038de048395645a96bdf20dba2ca0f81133325";

@@ -16,5 +16,10 @@
     "dotenv": "^17.4.2",
     "solc": "^0.8.28",
     "viem": "^2.53.1"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "hardhat": "^2.22.0"
   }
 }
