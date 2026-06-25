@@ -59,7 +59,11 @@ export default async function Home() {
       }
     } else {
       // No logs yet
-      data.status = "AWAITING AGENT...";
+      data.status = "LIVE (MOCK DATA)";
+      data.marketSummary = "Thị trường tiền điện tử hôm nay chứng kiến sự phục hồi mạnh mẽ sau nhiều ngày điều chỉnh. Bitcoin (BTC) đã có lúc chạm mốc kháng cự quan trọng, kéo theo sắc xanh lan tỏa lên các altcoin lớn.";
+      data.defiSummary = "Tổng giá trị khóa (TVL) trong DeFi tiếp tục đạt đỉnh mới, chủ yếu nhờ vào sự bùng nổ của các nền tảng Liquid Restaking và các pool thanh khoản thế hệ mới trên Ethereum.";
+      data.aiSummary = "Xu hướng AI x Web3 đang trở thành tâm điểm của chu kỳ này. Nhiều dự án lớn công bố tích hợp mô hình ngôn ngữ (LLM) vào Smart Contract để tự động hóa, nổi bật là các ứng dụng tiên phong trên Ritual Chain.";
+      data.communitySummary = "Cộng đồng đang bàn tán xôn xao về vụ airdrop khủng của một dự án layer 2. Bên cạnh đó, các chuyên gia cũng cảnh báo người dùng nâng cao cảnh giác trước các thủ đoạn lừa đảo phishing ngày càng tinh vi.";
     }
   } catch (error) {
     console.error("Failed to read from contract:", error);
@@ -83,7 +87,7 @@ export default async function Home() {
       <div className="newspaper-grid">
         {/* Main Article */}
         <section className="main-article-section">
-          <div className={`status-badge ${data.status === "LIVE" ? "status-live" : ""}`}>
+          <div className={`status-badge ${data.status.includes("LIVE") ? "status-live" : ""}`}>
             {data.status}
           </div>
           <article className="article main-article">
