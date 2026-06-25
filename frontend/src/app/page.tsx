@@ -1,5 +1,6 @@
 import { publicClient, REPORTER_ABI, REPORTER_ADDRESS } from '@/lib/ritualClient';
 import Image from 'next/image';
+import Parser from 'rss-parser';
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
@@ -13,18 +14,22 @@ export default async function Home() {
   let data = {
     status: "LIVE (MOCK DATA)",
     marketImage: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80",
+    marketTitle: "Crypto Markets Rebound",
     marketSummary: "Thị trường tiền điện tử hôm nay chứng kiến sự phục hồi mạnh mẽ sau chuỗi ngày điều chỉnh sâu. Giá Bitcoin (BTC) đã có lúc vượt qua ngưỡng kháng cự $65,000 một cách đầy thuyết phục, kéo theo sắc xanh lan tỏa toàn bộ thị trường altcoin. Động thái này được cho là nhờ vào những báo cáo kinh tế vĩ mô tích cực từ Mỹ và sự tham gia mạnh mẽ của các quỹ ETF.\n\nNhiều nhà phân tích cho rằng nếu BTC giữ vững mức này trong phiên đóng cửa tuần, chúng ta có thể sẽ thấy một chu kỳ tăng giá mới (bull run) được kích hoạt sớm hơn dự kiến. Các đồng tiền top đầu như Ethereum (ETH) và Solana (SOL) cũng ghi nhận mức tăng lần lượt là 5% và 8% trong 24 giờ qua.\n\nBên cạnh đó, dòng tiền đang có dấu hiệu luân chuyển từ các dự án vốn hóa lớn sang nhóm memecoin và các dự án gameFi, báo hiệu sự trở lại của khẩu vị rủi ro cao trong giới đầu tư bán lẻ. Khối lượng giao dịch trên các sàn phi tập trung (DEX) cũng tăng vọt hơn 30%.",
     marketRaw: "",
     
     defiImage: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=800&q=80",
+    defiTitle: "DeFi TVL Surges",
     defiSummary: "Tổng giá trị khóa (TVL) trong mảng Tài chính Phi tập trung (DeFi) tiếp tục đạt đỉnh mới, vượt qua mốc 100 tỷ USD. Động lực chính cho sự bùng nổ này đến từ các nền tảng Liquid Restaking như EigenLayer và Ether.fi, thu hút hàng tỷ USD vốn nhàn rỗi nhờ vào lợi suất hấp dẫn.\n\nKhông chỉ trên Ethereum, các blockchain như Solana và Base cũng ghi nhận sự trỗi dậy mạnh mẽ của các giao thức lending và AMM thế hệ mới. Các dự án này liên tục tung ra các chương trình điểm thưởng (points) và airdrop để tranh giành thị phần, tạo nên một 'mùa hè DeFi 2.0' đầy sôi động.\n\nTuy nhiên, sự phát triển quá nóng cũng đi kèm với rủi ro. Các chuyên gia bảo mật cảnh báo về việc tái thế chấp (restaking) quá mức có thể tạo ra rủi ro hệ thống kiểu domino. Nhà đầu tư được khuyến cáo nên đa dạng hóa rủi ro và không nên mù quáng đuổi theo lợi suất cao mà bỏ qua việc kiểm tra audit của dự án.",
     defiRaw: "",
     
     aiImage: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80",
+    aiTitle: "AI & Web3 Integration",
     aiSummary: "Xu hướng kết hợp AI và Web3 (AI x Crypto) đang trở thành tâm điểm chú ý lớn nhất của chu kỳ này. Hàng loạt các dự án lớn công bố việc tích hợp mô hình ngôn ngữ lớn (LLM) và học máy trực tiếp vào Smart Contract, mở ra khả năng tự động hóa và ra quyết định thông minh hoàn toàn trên chuỗi (on-chain).\n\nĐiển hình là Ritual Chain, một mạng lưới chuyên biệt dành riêng cho việc thực thi AI phi tập trung, vừa công bố những bản cập nhật mới nhất cho phép các Agent tự động đọc tin tức, phân tích dữ liệu và tự động giao dịch mà không cần sự can thiệp của con người. Các mô hình AI hiện có thể chạy hoàn toàn trong môi trường thực thi tin cậy (TEE), đảm bảo tính minh bạch và chống giả mạo.\n\nSự quan tâm của các quỹ đầu tư mạo hiểm vào mảng này đang ở mức cao nhất mọi thời đại. Nhiều dự án AI-crypto dù chỉ mới ở giai đoạn testnet đã định giá lên tới hàng tỷ USD. Các chuyên gia dự đoán AI sẽ là chất xúc tác lớn nhất đẩy thị trường tiền mã hóa tiến tới giai đoạn phổ cập (mass adoption) trong vài năm tới.",
     aiRaw: "",
     
     communityImage: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=800&q=80",
+    communityTitle: "Community Watch: Scams & Security",
     communitySummary: "Cộng đồng tiền mã hóa hôm nay đang xôn xao bàn tán về vụ việc một nền tảng cross-chain bridge vừa bị hacker tấn công, cuỗm đi khối lượng tài sản trị giá hơn 50 triệu USD. Kẻ tấn công đã lợi dụng một lỗ hổng trong quá trình xác thực đa chữ ký (multi-sig) để rút tiền.\n\nNgay sau sự việc, các chuyên gia bảo mật on-chain đã nhanh chóng vào cuộc truy vết dòng tiền và phát hiện hacker đang cố gắng rửa tiền thông qua các mixer như Tornado Cash. Sự việc một lần nữa dấy lên hồi chuông cảnh báo về tính an toàn của các cầu nối liên chuỗi, vốn luôn là miếng mồi ngon cho tội phạm mạng.\n\nBên cạnh những tin tức tiêu cực, cộng đồng mạng cũng đang háo hức chờ đợi đợt airdrop khủng từ dự án Layer-2 sắp ra mắt vào cuối tuần này. Hàng ngàn người dùng đã tích cực 'cày cuốc' on-chain suốt nhiều tháng qua và hy vọng sẽ nhận được một phần thưởng xứng đáng. Cảnh báo lừa đảo (phishing) mạo danh trang nhận airdrop cũng đã bắt đầu xuất hiện dày đặc trên X (Twitter).",
     communityRaw: ""
   };
@@ -89,7 +94,47 @@ export default async function Home() {
   // FALLBACK: If Ritual failed or returned no data, try calling OpenRouter directly
   if (!usedRitualData && process.env.OPENROUTER_API_KEY) {
     try {
-      const today = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      // 1. Fetch RSS Feed
+      const parser = new Parser({
+        customFields: {
+          item: [['media:content', 'mediaContent']]
+        }
+      });
+      const feed = await parser.parseURL('https://cointelegraph.com/rss');
+      
+      const topArticles = feed.items.slice(0, 15).map(item => ({
+        title: item.title,
+        description: item.contentSnippet || item.content,
+        image: item.mediaContent && item.mediaContent['$'] ? item.mediaContent['$'].url : null,
+        pubDate: item.pubDate
+      }));
+
+      // 2. Curate via AI
+      const prompt = `You are an expert news aggregator agent. Here are the 15 latest real crypto news articles:
+${JSON.stringify(topArticles, null, 2)}
+
+Your task is to curate these into 4 categories: Market, DeFi, AI x Crypto, and Community.
+For EACH category, select the most relevant article from the list above. 
+Output a JSON object with NO markdown wrapping, exactly like this:
+{
+  "marketTitle": "The exact title of the article you selected",
+  "marketSummary": "Write a 3-4 paragraph detailed English summary based on the article's description.",
+  "marketImage": "The EXACT image url of the article you selected",
+  
+  "defiTitle": "...",
+  "defiSummary": "...",
+  "defiImage": "...",
+  
+  "aiTitle": "...",
+  "aiSummary": "...",
+  "aiImage": "...",
+  
+  "communityTitle": "...",
+  "communitySummary": "...",
+  "communityImage": "..."
+}
+Note: If a category lacks a perfectly matching article, pick the closest one and adapt your summary. Ensure the images and titles strictly match the source array.`;
+
       const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",
         headers: {
@@ -100,9 +145,9 @@ export default async function Home() {
           model: "openai/gpt-4o-mini",
           messages: [
             { role: "system", content: "You are a professional cryptocurrency journalist. Write exclusively in English." },
-            { role: "user", content: `Today is ${today}. Write a 3-4 paragraph detailed and realistic crypto news summary for TODAY for each of these 4 categories: Market, DeFi, AI x Crypto, and Community. Format the output as a clean JSON object with NO markdown wrapping, exactly like this: { "marketSummary": "...", "defiSummary": "...", "aiSummary": "...", "communitySummary": "..." }.` }
+            { role: "user", content: prompt }
           ],
-          temperature: 0.7
+          temperature: 0.3
         }),
         next: { revalidate: 60 }
       });
@@ -112,11 +157,24 @@ export default async function Home() {
         const content = json.choices[0].message.content;
         const cleanContent = content.replace(/```json\n|```/g, '').trim();
         const parsed = JSON.parse(cleanContent);
+        
+        data.marketTitle = parsed.marketTitle || data.marketTitle;
         data.marketSummary = parsed.marketSummary || data.marketSummary;
+        data.marketImage = parsed.marketImage || data.marketImage;
+        
+        data.defiTitle = parsed.defiTitle || data.defiTitle;
         data.defiSummary = parsed.defiSummary || data.defiSummary;
+        data.defiImage = parsed.defiImage || data.defiImage;
+        
+        data.aiTitle = parsed.aiTitle || data.aiTitle;
         data.aiSummary = parsed.aiSummary || data.aiSummary;
+        data.aiImage = parsed.aiImage || data.aiImage;
+        
+        data.communityTitle = parsed.communityTitle || data.communityTitle;
         data.communitySummary = parsed.communitySummary || data.communitySummary;
-        data.status = "LIVE - SERVER BACKUP";
+        data.communityImage = parsed.communityImage || data.communityImage;
+        
+        data.status = "LIVE - RSS AGGREGATOR";
       }
     } catch (fallbackErr) {
       console.error("OpenRouter fallback failed:", fallbackErr);
@@ -145,7 +203,7 @@ export default async function Home() {
             {data.status}
           </div>
           <article className="article main-article">
-            <h2>Crypto Markets Rebound</h2>
+            <h2>{data.marketTitle}</h2>
             <div className="author">By Autonomous Reporter 0x0802</div>
             {data.marketImage && (
               <div className="article-image-container">
@@ -156,7 +214,7 @@ export default async function Home() {
           </article>
 
           <article className="article side-article" style={{ marginTop: '2rem' }}>
-            <h2 style={{ fontSize: '1.8rem', marginBottom: '0.5rem', fontFamily: 'var(--font-serif)' }}>Community Watch: Scams & Security</h2>
+            <h2 style={{ fontSize: '1.8rem', marginBottom: '0.5rem', fontFamily: 'var(--font-serif)' }}>{data.communityTitle}</h2>
             <div className="author">By Security Desk</div>
             {data.communityImage && (
               <div className="article-image-container">
@@ -170,7 +228,7 @@ export default async function Home() {
         {/* Side Articles */}
         <section className="side-articles-section">
           <article className="article side-article">
-            <h3>DeFi TVL Surges</h3>
+            <h3>{data.defiTitle}</h3>
             <div className="author">By Oracle Bot</div>
             {data.defiImage && (
               <div className="article-image-container">
@@ -181,7 +239,7 @@ export default async function Home() {
           </article>
 
           <article className="article side-article">
-            <h3>AI & Web3 Integration</h3>
+            <h3>{data.aiTitle}</h3>
             <div className="author">By LLM Precompile</div>
             {data.aiImage && (
               <div className="article-image-container">
