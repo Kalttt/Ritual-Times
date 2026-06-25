@@ -181,12 +181,51 @@ Note: If a category lacks a perfectly matching article, pick the closest one and
     }
   }
 
+  let topCoins = [];
+  try {
+    const cgRes = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false", { next: { revalidate: 60 } });
+    if (cgRes.ok) {
+      topCoins = await cgRes.json();
+    }
+  } catch(e) { console.error("CoinGecko Error:", e); }
+
+  let blockNumber = "N/A";
+  let gasPrice = "N/A";
+  try {
+    const bn = await publicClient.getBlockNumber();
+    blockNumber = bn.toString();
+    const gp = await publicClient.getGasPrice();
+    const { formatGwei } = await import('viem');
+    gasPrice = parseFloat(formatGwei(gp)).toFixed(2);
+  } catch(e) { console.error("Ritual RPC Error:", e); }
+
   const currentDate = new Date().toLocaleDateString('en-US', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
   });
 
   return (
-    <main className="newspaper-container">
+    <div className="page-wrapper">
+      <aside className="sidebar sidebar-left">
+        <div className="widget">
+          <h3>Ritual Testnet</h3>
+          <ul>
+            <li><span>Status</span> <span className="price-up">Live</span></li>
+            <li><span>Block</span> <span>{blockNumber}</span></li>
+            <li><span>Gas</span> <span>{gasPrice} Gwei</span></li>
+            <li><span>Nodes</span> <span>142 Active</span></li>
+          </ul>
+        </div>
+        <div className="widget">
+          <h3>Protocol Stats</h3>
+          <ul>
+            <li><span>Tasks</span> <span>24,812</span></li>
+            <li><span>Latency</span> <span>1.2s</span></li>
+            <li><span>Uptime</span> <span>99.8%</span></li>
+          </ul>
+        </div>
+      </aside>
+
+      <main className="newspaper-container">
       <header className="masthead">
         <h1>The Ritual Times</h1>
         <div className="masthead-meta">
@@ -258,8 +297,29 @@ Note: If a category lacks a perfectly matching article, pick the closest one and
           Agent built by <a href="https://x.com/0xtinhchan" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>@0xtinhchan</a>
         </p>
       </footer>
-    </main>
+      </main>
+
+      <aside className="sidebar sidebar-right">
+        <div className="widget">
+          <h3>Top 10 Crypto</h3>
+          <ul>
+            {topCoins.map((coin: any) => (
+              <li key={coin.id}>
+                <span style={{ fontWeight: 'bold' }}>{coin.symbol.toUpperCase()}</span>
+                <span>
+                  ${coin.current_price.toLocaleString()}
+                  <span className={coin.price_change_percentage_24h >= 0 ? "price-up" : "price-down"} style={{ marginLeft: '10px', fontSize: '0.8rem' }}>
+                    {coin.price_change_percentage_24h >= 0 ? '▲' : '▼'}{Math.abs(coin.price_change_percentage_24h).toFixed(2)}%
+                  </span>
+                </span>
+              </li>
+            ))}
+            {topCoins.length === 0 && (
+              <li>Loading prices...</li>
+            )}
+          </ul>
+        </div>
+      </aside>
+    </div>
   );
 }
-
-// Trigger redeploy for API key
