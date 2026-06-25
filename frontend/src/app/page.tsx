@@ -4,6 +4,12 @@ import Image from 'next/image';
 export const revalidate = 60; // Revalidate every 60 seconds
 
 export default async function Home() {
+  const renderParagraphs = (text: string) => {
+    if (!text) return null;
+    return text.split('\n').filter((p: string) => p.trim() !== '').map((p: string, i: number) => (
+      <p key={i} style={{ marginBottom: '1rem', textIndent: '1.5rem', lineHeight: '1.6' }}>{p}</p>
+    ));
+  };
   let data = {
     marketSummary: "Awaiting...", marketRaw: "Awaiting...", marketImage: "",
     defiSummary: "Awaiting...", defiRaw: "Awaiting...", defiImage: "",
@@ -60,10 +66,17 @@ export default async function Home() {
     } else {
       // No logs yet
       data.status = "LIVE (MOCK DATA)";
-      data.marketSummary = "Thị trường tiền điện tử hôm nay chứng kiến sự phục hồi mạnh mẽ sau nhiều ngày điều chỉnh. Bitcoin (BTC) đã có lúc chạm mốc kháng cự quan trọng, kéo theo sắc xanh lan tỏa lên các altcoin lớn.";
-      data.defiSummary = "Tổng giá trị khóa (TVL) trong DeFi tiếp tục đạt đỉnh mới, chủ yếu nhờ vào sự bùng nổ của các nền tảng Liquid Restaking và các pool thanh khoản thế hệ mới trên Ethereum.";
-      data.aiSummary = "Xu hướng AI x Web3 đang trở thành tâm điểm của chu kỳ này. Nhiều dự án lớn công bố tích hợp mô hình ngôn ngữ (LLM) vào Smart Contract để tự động hóa, nổi bật là các ứng dụng tiên phong trên Ritual Chain.";
-      data.communitySummary = "Cộng đồng đang bàn tán xôn xao về vụ airdrop khủng của một dự án layer 2. Bên cạnh đó, các chuyên gia cũng cảnh báo người dùng nâng cao cảnh giác trước các thủ đoạn lừa đảo phishing ngày càng tinh vi.";
+      data.marketImage = "https://images.cointelegraph.com/cdn-cgi/image/format=auto,onerror=redirect,quality=90,width=717/https://s3.cointelegraph.com/uploads/2023-11/c9f9660d-0348-43d9-ab70-65004312abf2.jpg";
+      data.marketSummary = "Thị trường tiền điện tử hôm nay chứng kiến sự phục hồi mạnh mẽ sau chuỗi ngày điều chỉnh sâu. Giá Bitcoin (BTC) đã có lúc vượt qua ngưỡng kháng cự $65,000 một cách đầy thuyết phục, kéo theo sắc xanh lan tỏa toàn bộ thị trường altcoin. Động thái này được cho là nhờ vào những báo cáo kinh tế vĩ mô tích cực từ Mỹ và sự tham gia mạnh mẽ của các quỹ ETF.\n\nNhiều nhà phân tích cho rằng nếu BTC giữ vững mức này trong phiên đóng cửa tuần, chúng ta có thể sẽ thấy một chu kỳ tăng giá mới (bull run) được kích hoạt sớm hơn dự kiến. Các đồng tiền top đầu như Ethereum (ETH) và Solana (SOL) cũng ghi nhận mức tăng lần lượt là 5% và 8% trong 24 giờ qua.\n\nBên cạnh đó, dòng tiền đang có dấu hiệu luân chuyển từ các dự án vốn hóa lớn sang nhóm memecoin và các dự án gameFi, báo hiệu sự trở lại của khẩu vị rủi ro cao trong giới đầu tư bán lẻ. Khối lượng giao dịch trên các sàn phi tập trung (DEX) cũng tăng vọt hơn 30%.";
+
+      data.defiImage = "https://images.cointelegraph.com/cdn-cgi/image/format=auto,onerror=redirect,quality=90,width=717/https://s3.cointelegraph.com/uploads/2024-01/ab6419d8-c922-446d-986c-ba3fcb2b2b1a.jpg";
+      data.defiSummary = "Tổng giá trị khóa (TVL) trong mảng Tài chính Phi tập trung (DeFi) tiếp tục đạt đỉnh mới, vượt qua mốc 100 tỷ USD. Động lực chính cho sự bùng nổ này đến từ các nền tảng Liquid Restaking như EigenLayer và Ether.fi, thu hút hàng tỷ USD vốn nhàn rỗi nhờ vào lợi suất hấp dẫn.\n\nKhông chỉ trên Ethereum, các blockchain như Solana và Base cũng ghi nhận sự trỗi dậy mạnh mẽ của các giao thức lending và AMM thế hệ mới. Các dự án này liên tục tung ra các chương trình điểm thưởng (points) và airdrop để tranh giành thị phần, tạo nên một 'mùa hè DeFi 2.0' đầy sôi động.\n\nTuy nhiên, sự phát triển quá nóng cũng đi kèm với rủi ro. Các chuyên gia bảo mật cảnh báo về việc tái thế chấp (restaking) quá mức có thể tạo ra rủi ro hệ thống kiểu domino. Nhà đầu tư được khuyến cáo nên đa dạng hóa rủi ro và không nên mù quáng đuổi theo lợi suất cao mà bỏ qua việc kiểm tra audit của dự án.";
+
+      data.aiImage = "https://images.cointelegraph.com/cdn-cgi/image/format=auto,onerror=redirect,quality=90,width=717/https://s3.cointelegraph.com/uploads/2024-02/952cd37d-304b-44ec-b91c-7f5eecc9492f.jpg";
+      data.aiSummary = "Xu hướng kết hợp AI và Web3 (AI x Crypto) đang trở thành tâm điểm chú ý lớn nhất của chu kỳ này. Hàng loạt các dự án lớn công bố việc tích hợp mô hình ngôn ngữ lớn (LLM) và học máy trực tiếp vào Smart Contract, mở ra khả năng tự động hóa và ra quyết định thông minh hoàn toàn trên chuỗi (on-chain).\n\nĐiển hình là Ritual Chain, một mạng lưới chuyên biệt dành riêng cho việc thực thi AI phi tập trung, vừa công bố những bản cập nhật mới nhất cho phép các Agent tự động đọc tin tức, phân tích dữ liệu và tự động giao dịch mà không cần sự can thiệp của con người. Các mô hình AI hiện có thể chạy hoàn toàn trong môi trường thực thi tin cậy (TEE), đảm bảo tính minh bạch và chống giả mạo.\n\nSự quan tâm của các quỹ đầu tư mạo hiểm vào mảng này đang ở mức cao nhất mọi thời đại. Nhiều dự án AI-crypto dù chỉ mới ở giai đoạn testnet đã định giá lên tới hàng tỷ USD. Các chuyên gia dự đoán AI sẽ là chất xúc tác lớn nhất đẩy thị trường tiền mã hóa tiến tới giai đoạn phổ cập (mass adoption) trong vài năm tới.";
+
+      data.communityImage = "https://images.cointelegraph.com/cdn-cgi/image/format=auto,onerror=redirect,quality=90,width=717/https://s3.cointelegraph.com/uploads/2023-08/1fa5afba-17dc-401c-92b1-d57f00bf754a.jpg";
+      data.communitySummary = "Cộng đồng tiền mã hóa hôm nay đang xôn xao bàn tán về vụ việc một nền tảng cross-chain bridge vừa bị hacker tấn công, cuỗm đi khối lượng tài sản trị giá hơn 50 triệu USD. Kẻ tấn công đã lợi dụng một lỗ hổng trong quá trình xác thực đa chữ ký (multi-sig) để rút tiền.\n\nNgay sau sự việc, các chuyên gia bảo mật on-chain đã nhanh chóng vào cuộc truy vết dòng tiền và phát hiện hacker đang cố gắng rửa tiền thông qua các mixer như Tornado Cash. Sự việc một lần nữa dấy lên hồi chuông cảnh báo về tính an toàn của các cầu nối liên chuỗi, vốn luôn là miếng mồi ngon cho tội phạm mạng.\n\nBên cạnh những tin tức tiêu cực, cộng đồng mạng cũng đang háo hức chờ đợi đợt airdrop khủng từ dự án Layer-2 sắp ra mắt vào cuối tuần này. Hàng ngàn người dùng đã tích cực 'cày cuốc' on-chain suốt nhiều tháng qua và hy vọng sẽ nhận được một phần thưởng xứng đáng. Cảnh báo lừa đảo (phishing) mạo danh trang nhận airdrop cũng đã bắt đầu xuất hiện dày đặc trên X (Twitter).";
     }
   } catch (error) {
     console.error("Failed to read from contract:", error);
@@ -98,7 +111,7 @@ export default async function Home() {
                 <img src={data.marketImage} alt="Market" className="article-image" />
               </div>
             )}
-            <div className="summary-content">{data.marketSummary}</div>
+            <div className="summary-content">{renderParagraphs(data.marketSummary)}</div>
           </article>
 
           <article className="article side-article" style={{ marginTop: '2rem' }}>
@@ -109,7 +122,7 @@ export default async function Home() {
                 <img src={data.communityImage} alt="Community" className="article-image" />
               </div>
             )}
-            <div className="summary-content" style={{ columnCount: 1, fontSize: '1.1rem' }}>{data.communitySummary}</div>
+            <div className="summary-content" style={{ columnCount: 1, fontSize: '1.1rem' }}>{renderParagraphs(data.communitySummary)}</div>
           </article>
         </section>
 
@@ -123,7 +136,7 @@ export default async function Home() {
                 <img src={data.defiImage} alt="DeFi" className="article-image" />
               </div>
             )}
-            <div className="summary-content">{data.defiSummary}</div>
+            <div className="summary-content">{renderParagraphs(data.defiSummary)}</div>
           </article>
 
           <article className="article side-article">
@@ -134,7 +147,7 @@ export default async function Home() {
                 <img src={data.aiImage} alt="AI" className="article-image" />
               </div>
             )}
-            <div className="summary-content">{data.aiSummary}</div>
+            <div className="summary-content">{renderParagraphs(data.aiSummary)}</div>
           </article>
         </section>
       </div>
