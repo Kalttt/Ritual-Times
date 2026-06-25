@@ -89,6 +89,7 @@ export default async function Home() {
   // FALLBACK: If Ritual failed or returned no data, try calling OpenRouter directly
   if (!usedRitualData && process.env.OPENROUTER_API_KEY) {
     try {
+      const today = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
       const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",
         headers: {
@@ -98,8 +99,8 @@ export default async function Home() {
         body: JSON.stringify({
           model: "openai/gpt-4o-mini",
           messages: [
-            { role: "system", content: "You are a professional cryptocurrency journalist. Write in Vietnamese." },
-            { role: "user", content: "Write a 3-4 paragraph detailed news summary for each of these 4 categories: Market (Thị trường), DeFi, AI x Crypto, and Community (Cộng đồng). Format the output as a clean JSON object with NO markdown wrapping, exactly like this: { \"marketSummary\": \"...\", \"defiSummary\": \"...\", \"aiSummary\": \"...\", \"communitySummary\": \"...\" }." }
+            { role: "system", content: "You are a professional cryptocurrency journalist. Write exclusively in English." },
+            { role: "user", content: `Today is ${today}. Write a 3-4 paragraph detailed and realistic crypto news summary for TODAY for each of these 4 categories: Market, DeFi, AI x Crypto, and Community. Format the output as a clean JSON object with NO markdown wrapping, exactly like this: { "marketSummary": "...", "defiSummary": "...", "aiSummary": "...", "communitySummary": "..." }.` }
           ],
           temperature: 0.7
         }),
