@@ -189,6 +189,27 @@ Note: If a category lacks a perfectly matching article, pick the closest one and
     }
   } catch(e) { console.error("CoinGecko Error:", e); }
 
+  let fng = { value: "N/A", classification: "N/A" };
+  try {
+    const fngRes = await fetch("https://api.alternative.me/fng/?limit=1", { next: { revalidate: 60 } });
+    if (fngRes.ok) {
+      const fngData = await fngRes.json();
+      fng = {
+        value: fngData.data[0].value,
+        classification: fngData.data[0].value_classification
+      };
+    }
+  } catch(e) { console.error("FNG Error:", e); }
+
+  let trendingCoins = [];
+  try {
+    const trendRes = await fetch("https://api.coingecko.com/api/v3/search/trending", { next: { revalidate: 60 } });
+    if (trendRes.ok) {
+      const trendData = await trendRes.json();
+      trendingCoins = trendData.coins.slice(0, 5).map((c: any) => c.item);
+    }
+  } catch(e) { console.error("Trending Error:", e); }
+
   let blockNumber = "N/A";
   let gasPrice = "N/A";
   try {
@@ -222,6 +243,15 @@ Note: If a category lacks a perfectly matching article, pick the closest one and
             <li><span>Latency</span> <span>1.2s</span></li>
             <li><span>Uptime</span> <span>99.8%</span></li>
           </ul>
+        </div>
+        <div className="widget" style={{ textAlign: 'center' }}>
+          <h3>Fear & Greed Index</h3>
+          <div style={{ fontSize: '3rem', fontWeight: 'bold', fontFamily: 'var(--font-playfair)', lineHeight: '1', color: parseInt(fng.value) > 50 ? '#2e7d32' : '#c62828' }}>
+            {fng.value}
+          </div>
+          <div style={{ fontSize: '1rem', textTransform: 'uppercase', marginTop: '0.5rem', fontWeight: 'bold', color: 'var(--secondary)' }}>
+            {fng.classification}
+          </div>
         </div>
       </aside>
 
@@ -317,6 +347,21 @@ Note: If a category lacks a perfectly matching article, pick the closest one and
             {topCoins.length === 0 && (
               <li>Loading prices...</li>
             )}
+          </ul>
+        </div>
+        <div className="widget">
+          <h3>Top 5 Trending 🔥</h3>
+          <ul>
+            {trendingCoins.map((coin: any) => (
+              <li key={coin.id}>
+                <span style={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <img src={coin.thumb} alt={coin.symbol} width="16" height="16" style={{ borderRadius: '50%' }} />
+                  {coin.symbol.toUpperCase()}
+                </span>
+                <span>#{coin.market_cap_rank || '?'}</span>
+              </li>
+            ))}
+            {trendingCoins.length === 0 && <li>Loading...</li>}
           </ul>
         </div>
       </aside>

@@ -35,6 +35,7 @@ h1, h2, h3, h4, h5, h6 {
 .page-wrapper {
   display: flex;
   justify-content: center;
+  align-items: flex-start;
   gap: 3rem;
   padding: 2rem;
   max-width: 1800px;
@@ -45,6 +46,8 @@ h1, h2, h3, h4, h5, h6 {
   width: 250px;
   flex-shrink: 0;
   display: none;
+  position: sticky;
+  top: 2rem;
 }
 
 @media (min-width: 1400px) {
