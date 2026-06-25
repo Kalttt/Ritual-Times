@@ -13,27 +13,53 @@ export default async function Home() {
   };
 
   try {
-    const keys = [
-      'marketSummary', 'marketRaw', 'marketImage',
-      'defiSummary', 'defiRaw', 'defiImage',
-      'aiSummary', 'aiRaw', 'aiImage',
-      'communitySummary', 'communityRaw', 'communityImage'
-    ];
-
-    const results = await Promise.all(
-      keys.map(key => publicClient.readContract({
-        address: REPORTER_ADDRESS as `0x${string}`,
-        abi: REPORTER_ABI,
-        functionName: key as any,
-      }))
-    );
-
-    keys.forEach((key, index) => {
-      if (results[index]) (data as any)[key] = results[index] as string;
+    const logs = await publicClient.getLogs({
+      address: REPORTER_ADDRESS as `0x${string}`,
+      event: REPORTER_ABI[0] as any, // SovereignResult event
+      fromBlock: BigInt(37260000)
     });
 
-    if (data.marketSummary && data.marketSummary !== "Awaiting...") {
-      data.status = "LIVE";
+    if (logs && logs.length > 0) {
+      // Get the latest result
+      const latestLog = logs[logs.length - 1] as any;
+      const resultBytes = latestLog.args.result as `0x${string}`;
+      
+      if (resultBytes) {
+        try {
+          const { decodeAbiParameters } = await import('viem');
+          const decoded = decodeAbiParameters(
+            [
+              { name: "success", type: "bool" },
+              { name: "error", type: "string" },
+              { name: "text", type: "string" },
+              { name: "convo", type: "tuple", components: [{ name: "platform", type: "string" }, { name: "path", type: "string" }, { name: "keyRef", type: "string" }] },
+              { name: "output", type: "tuple", components: [{ name: "platform", type: "string" }, { name: "path", type: "string" }, { name: "keyRef", type: "string" }] },
+              { name: "skills", type: "tuple[]", components: [{ name: "platform", type: "string" }, { name: "path", type: "string" }, { name: "keyRef", type: "string" }] }
+            ],
+            resultBytes
+          );
+
+          const success = decoded[0];
+          const text = decoded[2];
+
+          if (success && text) {
+            const parsed = JSON.parse(text as string);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              const news = parsed[0];
+              data.marketSummary = news.marketSummary || data.marketSummary;
+              data.defiSummary = news.defiSummary || data.defiSummary;
+              data.aiSummary = news.aiSummary || data.aiSummary;
+              data.communitySummary = news.communitySummary || data.communitySummary;
+              data.status = "LIVE - SOVEREIGN HARNESS";
+            }
+          }
+        } catch (decodeErr) {
+          console.error("Failed to decode result bytes:", decodeErr);
+        }
+      }
+    } else {
+      // No logs yet
+      data.status = "AWAITING AGENT...";
     }
   } catch (error) {
     console.error("Failed to read from contract:", error);

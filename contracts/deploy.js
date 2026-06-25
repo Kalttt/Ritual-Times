@@ -81,8 +81,7 @@ async function main() {
   const deployHash = await walletClient.deployContract({
     abi,
     bytecode: `0x${bytecode}`,
-    args: [schedulerAddress],
-    nonce: 35
+    args: [schedulerAddress]
   });
   console.log(`Deployment transaction sent: ${deployHash}`);
 
@@ -97,8 +96,7 @@ async function main() {
     address: contractAddress,
     abi,
     functionName: 'depositForFees',
-    value: parseEther('0.05'),
-    nonce: 36
+    value: parseEther('0.05')
   });
   
   console.log(`Deposit transaction sent: ${depositHash}`);
