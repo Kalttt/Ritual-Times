@@ -8,7 +8,7 @@ export default async function Home() {
   const renderParagraphs = (text: string) => {
     if (!text) return null;
     return text.split('\n').filter((p: string) => p.trim() !== '').map((p: string, i: number) => (
-      <p key={i} style={{ marginBottom: '1rem', textIndent: '1.5rem', lineHeight: '1.6' }}>{p}</p>
+      <p key={i} className={`article-paragraph ${i === 0 ? 'first-paragraph' : ''}`}>{p}</p>
     ));
   };
   let data = {

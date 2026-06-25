@@ -164,11 +164,23 @@ h1, h2, h3, h4, h5, h6 {
 
 .main-article .summary-content::first-letter {
   float: left;
-  font-size: 4rem;
-  line-height: 1;
+  font-size: 4.2rem;
+  line-height: 0.85;
+  padding-top: 0.3rem;
   padding-right: 0.5rem;
   font-family: var(--font-playfair);
   font-weight: bold;
+}
+
+.article-paragraph {
+  margin-bottom: 0.8rem;
+  text-align: justify;
+  line-height: 1.6;
+  hyphens: auto;
+}
+
+.article-paragraph:not(.first-paragraph) {
+  text-indent: 1.5rem;
 }
 
 .side-articles-section {
@@ -196,6 +208,8 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 1.05rem;
   white-space: pre-wrap;
   line-height: 1.5;
+  text-align: justify;
+  hyphens: auto;
 }
 
 .raw-feed-box {
